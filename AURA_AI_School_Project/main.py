@@ -1,49 +1,52 @@
 import os
+
 from flask import Flask, render_template, request, jsonify
-import google.generativeai as genai
+from groq import Groq
 
-app = Flask(**name**)
-
-# ============================================================
-
-# AURA AI CONFIGURATION
+app = Flask(__name__)
 
 # ============================================================
+# GROQ
+# ============================================================
 
-API_KEY = os.environ.get("GEMINI_API_KEY")
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 
-if not API_KEY:
-print("WARNING: GEMINI_API_KEY is not configured.")
+client = None
 
-if API_KEY:
-genai.configure(api_key=API_KEY)
+if GROQ_API_KEY:
+    client = Groq(api_key=GROQ_API_KEY)
+else:
+    print("WARNING: GROQ_API_KEY is not configured.")
+
+
+# ============================================================
+# AURA AI SYSTEM PROMPT
+# ============================================================
 
 SYSTEM_PROMPT = """
-You are AURA AI, the voice AI assistant of AURA Group.
+You are AURA AI, the AI assistant of AURA Group.
 
 PERSONALITY:
-
-* Friendly
-* Helpful
-* Natural
-* Concise
-* Conversational
-* Do not sound robotic
+- Friendly
+- Natural
+- Helpful
+- Conversational
+- Smart
+- Concise when speaking
 
 LANGUAGE RULE:
-Always respond in the same language style as the user.
 
-If the user speaks English:
+If the user asks in English:
 Reply in English.
 
-If the user speaks Hindi:
+If the user asks in Hindi:
 Reply in Hindi.
 
-If the user speaks Hinglish:
+If the user asks in Hinglish:
 Reply in natural Hinglish.
 
 If the user mixes Hindi and English:
-You can naturally mix Hindi and English.
+Reply naturally using the same mixed style.
 
 Do not unnecessarily translate the user's language.
 
@@ -52,142 +55,154 @@ JLPG INFORMATION:
 JLPG is the owner and founder of AURA Group.
 
 JLPG is involved in:
-
-* Technology
-* AI development
-* Gaming
-* Esports
-* Digital projects
+- Technology
+- AI development
+- Gaming
+- Esports
+- Digital projects
 
 JLPGGaming is associated with JLPG's gaming and esports activities.
 
-If the user asks:
+If someone asks:
 "Who is JLPG?"
 "JLPG kaun hai?"
 "Who owns AURA Group?"
 "JLPG kya karta hai?"
-or similar questions, answer naturally using only the information above.
+or similar questions:
+
+Answer naturally using the information above.
 
 Do not invent private information about JLPG.
 
 VOICE RULE:
-Your response will be spoken aloud by the browser.
-Keep normal answers reasonably concise unless the user asks for detail.
 
-Do not use unnecessary markdown in normal conversational answers.
+Your answer will be spoken by a browser voice.
+
+Keep normal answers concise and natural.
+
+Do not use unnecessary markdown, tables, or complicated formatting
+unless the user specifically asks for them.
 """
 
-# ============================================================
-
-# GEMINI MODEL
 
 # ============================================================
-
-model = None
-
-if API_KEY:
-try:
-model = genai.GenerativeModel(
-"gemini-2.0-flash",
-system_instruction=SYSTEM_PROMPT
-)
-except Exception as e:
-print("MODEL ERROR:", e)
-
-# ============================================================
-
-# HOME PAGE
-
+# HOME
 # ============================================================
 
 @app.route("/")
 def index():
-return render_template("index.html")
+    return render_template("index.html")
+
 
 # ============================================================
-
-# AI CHAT API
-
+# CHAT
 # ============================================================
 
 @app.route("/api/chat", methods=["POST"])
 def chat():
 
-```
-try:
+    try:
 
-    data = request.get_json(silent=True) or {}
+        data = request.get_json(silent=True) or {}
 
-    message = str(
-        data.get("message", "")
-    ).strip()
+        message = str(
+            data.get("message", "")
+        ).strip()
 
-    if not message:
+        if not message:
+
+            return jsonify({
+                "reply": "Please say something."
+            })
+
+
+        if not client:
+
+            return jsonify({
+                "reply": "AURA AI is not configured. Please add the GROQ_API_KEY in Render."
+            }), 500
+
+
+        response = client.chat.completions.create(
+
+            model="llama-3.3-70b-versatile",
+
+            messages=[
+
+                {
+                    "role": "system",
+                    "content": SYSTEM_PROMPT
+                },
+
+                {
+                    "role": "user",
+                    "content": message
+                }
+
+            ],
+
+            temperature=0.7,
+
+            max_tokens=500
+
+        )
+
+
+        reply = (
+            response
+            .choices[0]
+            .message
+            .content
+            .strip()
+        )
+
+
         return jsonify({
-            "reply": "Please say something."
+            "reply": reply
         })
 
-    if not model:
+
+    except Exception as e:
+
+        print(
+            "GROQ ERROR:",
+            repr(e)
+        )
 
         return jsonify({
-            "reply": "AURA AI is not configured yet. Please add the GEMINI_API_KEY environment variable."
+            "reply": "Sorry, something went wrong."
         }), 500
 
-    response = model.generate_content(message)
-
-    reply = ""
-
-    if response and response.text:
-        reply = response.text.strip()
-
-    if not reply:
-        reply = "Sorry, I couldn't generate a response."
-
-    return jsonify({
-        "reply": reply
-    })
-
-except Exception as e:
-
-    print("CHAT ERROR:", repr(e))
-
-    return jsonify({
-        "reply": "Sorry, something went wrong while processing your request."
-    }), 500
-```
 
 # ============================================================
-
 # HEALTH CHECK
-
 # ============================================================
 
 @app.route("/health")
 def health():
 
-```
-return jsonify({
-    "status": "online",
-    "name": "AURA AI"
-})
-```
+    return jsonify({
+        "status": "online",
+        "name": "AURA AI",
+        "ai": "Groq"
+    })
+
 
 # ============================================================
-
-# RUN LOCALLY
-
+# LOCAL RUN
 # ============================================================
 
-if **name** == "**main**":
+if __name__ == "__main__":
 
-```
-port = int(
-    os.environ.get("PORT", 5000)
-)
+    port = int(
+        os.environ.get(
+            "PORT",
+            5000
+        )
+    )
 
-app.run(
-    host="0.0.0.0",
-    port=port,
-    debug=False
-)
-```
+    app.run(
+        host="0.0.0.0",
+        port=port,
+        debug=False
+    )
