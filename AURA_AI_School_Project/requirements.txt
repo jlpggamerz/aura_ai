@@ -1,6 +1,5 @@
 SpeechRecognition
 pyttsx3
-PyAudio
 requests
 Flask
 groq
