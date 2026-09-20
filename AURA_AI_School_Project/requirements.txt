@@ -4,3 +4,6 @@ requests
 Flask
 groq
 gunicorn
+Flask
+gunicorn
+google-generativeai
