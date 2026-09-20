@@ -1,1099 +1,1181 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0"
-
->
-
-<title>AURA AI</title>
-
-<style>
-
-* {
-    box-sizing: border-box;
-}
-
-html,
-body {
-    margin: 0;
-    width: 100%;
-    min-height: 100%;
-}
-
-body {
-
-    min-height: 100vh;
-
-    background:
-        radial-gradient(
-            circle at center,
-            #18245a 0%,
-            #090d20 35%,
-            #02040a 80%
-        );
-
-    color: white;
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    overflow: hidden;
-}
-
-
-/* =========================================================
-   APP
-========================================================= */
-
-.app {
-
-    width: 100%;
-
-    min-height: 100vh;
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: center;
-
-    align-items: center;
-
-    position: relative;
-
-    padding: 25px;
-}
-
-
-/* =========================================================
-   BRAND
-========================================================= */
-
-.logo {
-
-    position: absolute;
-
-    top: 30px;
-
-    font-size: 27px;
-
-    font-weight: 700;
-
-    letter-spacing: 4px;
-
-    text-shadow:
-        0 0 15px #4d7cff,
-        0 0 35px #3155ff;
-}
-
-
-.by {
-
-    position: absolute;
-
-    top: 68px;
-
-    font-size: 12px;
-
-    opacity: .55;
-
-    letter-spacing: 1px;
-}
-
-
-/* =========================================================
-   VOICE ORB
-========================================================= */
-
-.orb-wrapper {
-
-    width: 320px;
-
-    height: 320px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    position: relative;
-}
-
-
-/* OUTER RINGS */
-
-.ring {
-
-    position: absolute;
-
-    border-radius: 50%;
-
-    border: 1px solid
-        rgba(90, 130, 255, .25);
-
-    width: 230px;
-
-    height: 230px;
-
-    opacity: .6;
-}
-
-.ring2 {
-
-    width: 270px;
-
-    height: 270px;
-
-    opacity: .35;
-}
-
-
-/* MAIN ORB */
-
-.orb {
-
-    width: 185px;
-
-    height: 185px;
-
-    border-radius: 50%;
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: center;
-
-    align-items: center;
-
-    background:
-        radial-gradient(
-            circle at 35% 25%,
-            #7da0ff,
-            #405ff0 35%,
-            #17215d 75%,
-            #090d25
-        );
-
-    box-shadow:
-
-        0 0 30px
-        rgba(70, 110, 255, .85),
-
-        0 0 80px
-        rgba(50, 80, 255, .45),
-
-        inset 0 0 30px
-        rgba(255,255,255,.12);
-
-    transition:
-        transform .3s ease,
-        box-shadow .3s ease;
-}
-
-
-.mic {
-
-    font-size: 43px;
-
-    margin-bottom: 8px;
-}
-
-
-.state {
-
-    font-size: 13px;
-
-    opacity: .85;
-
-    letter-spacing: .5px;
-}
-
-
-/* =========================================================
-   LISTENING
-========================================================= */
-
-.listening .orb {
-
-    animation:
-        listenPulse 1.5s infinite ease-in-out;
-}
-
-.listening .ring {
-
-    animation:
-        ringPulse 2s infinite ease-in-out;
-}
-
-
-@keyframes listenPulse {
-
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.07);
-    }
-
-    100% {
-        transform: scale(1);
-    }
-}
-
-
-@keyframes ringPulse {
-
-    0% {
-        transform: scale(.92);
-        opacity: .25;
-    }
-
-    50% {
-        transform: scale(1.05);
-        opacity: .7;
-    }
-
-    100% {
-        transform: scale(.92);
-        opacity: .25;
-    }
-}
-
-
-/* =========================================================
-   THINKING
-========================================================= */
-
-.thinking .orb {
-
-    animation:
-        thinkingPulse .7s infinite alternate;
-
-    box-shadow:
-
-        0 0 45px
-        rgba(170, 90, 255, .9),
-
-        0 0 110px
-        rgba(140, 70, 255, .45);
-}
-
-
-@keyframes thinkingPulse {
-
-    from {
-        transform: scale(1);
-    }
-
-    to {
-        transform: scale(1.12);
-    }
-}
-
-
-/* =========================================================
-   SPEAKING
-========================================================= */
-
-.speaking .orb {
-
-    animation:
-        speakingPulse .4s infinite alternate;
-
-    box-shadow:
-
-        0 0 50px
-        rgba(40, 220, 255, .95),
-
-        0 0 120px
-        rgba(30, 180, 255, .5);
-}
-
-
-@keyframes speakingPulse {
-
-    from {
-        transform: scale(1);
-    }
-
-    to {
-        transform: scale(1.15);
-    }
-}
-
-
-/* =========================================================
-   STATUS
-========================================================= */
-
-.status {
-
-    margin-top: 25px;
-
-    font-size: 18px;
-
-    opacity: .9;
-
-    text-align: center;
-}
-
-
-.hint {
-
-    margin-top: 10px;
-
-    font-size: 13px;
-
-    opacity: .4;
-
-    text-align: center;
-}
-
-
-/* =========================================================
-   RESPONSE
-========================================================= */
-
-.response {
-
-    width: 90%;
-
-    max-width: 650px;
-
-    min-height: 25px;
-
-    margin-top: 22px;
-
-    text-align: center;
-
-    font-size: 16px;
-
-    line-height: 1.5;
-
-    opacity: .9;
-
-    max-height: 120px;
-
-    overflow-y: auto;
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media(max-width: 600px) {
-
-    .orb-wrapper {
-
-        width: 270px;
-
-        height: 270px;
-    }
-
-    .orb {
-
-        width: 155px;
-
-        height: 155px;
-    }
-
-    .ring {
-
-        width: 195px;
-
-        height: 195px;
-    }
-
-    .ring2 {
-
-        width: 230px;
-
-        height: 230px;
-    }
-
-    .mic {
-
-        font-size: 35px;
-    }
-
-    .logo {
-
-        font-size: 23px;
-    }
-}
-
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AURA AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at top, #182848 0%, #090b14 45%, #030409 100%);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+
+        header {
+            width: 100%;
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            background: rgba(0,0,0,0.15);
+            backdrop-filter: blur(12px);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #00d9ff, #6c4cff);
+            box-shadow: 0 0 25px rgba(0,217,255,0.35);
+        }
+
+        .brand h1 {
+            font-size: 21px;
+            letter-spacing: 1px;
+        }
+
+        .brand p {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 3px;
+        }
+
+        .online {
+            font-size: 12px;
+            color: #6fffc1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .online-dot {
+            width: 8px;
+            height: 8px;
+            background: #00ff9d;
+            border-radius: 50%;
+            box-shadow: 0 0 12px #00ff9d;
+        }
+
+        /* MAIN */
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 1100px;
+            margin: auto;
+            padding: 35px 20px 25px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* VOICE AREA */
+
+        .voice-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0 30px;
+        }
+
+        .orb-container {
+            position: relative;
+            width: 190px;
+            height: 190px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ring {
+            position: absolute;
+            border: 1px solid rgba(0,217,255,0.25);
+            border-radius: 50%;
+            width: 170px;
+            height: 170px;
+            animation: rotate 8s linear infinite;
+        }
+
+        .ring.two {
+            width: 205px;
+            height: 205px;
+            border-color: rgba(108,76,255,0.20);
+            animation-duration: 12s;
+            animation-direction: reverse;
+        }
+
+        .orb {
+            width: 115px;
+            height: 115px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            background: radial-gradient(circle at 35% 30%, #51eaff, #1760ff 45%, #241060 100%);
+            box-shadow:
+                0 0 30px rgba(0,217,255,0.55),
+                0 0 80px rgba(58,75,255,0.35);
+            transition: 0.3s;
+        }
+
+        .orb.listening {
+            animation: listening 1.4s infinite;
+        }
+
+        .orb.thinking {
+            animation: thinking 0.8s infinite;
+            background: radial-gradient(circle at 35% 30%, #d19cff, #713cff 50%, #190b45 100%);
+        }
+
+        .orb.speaking {
+            animation: speaking 0.45s infinite alternate;
+            background: radial-gradient(circle at 35% 30%, #8ffff1, #00a8ff 50%, #063c61 100%);
+        }
+
+        .orb.error {
+            background: radial-gradient(circle at 35% 30%, #ff8c8c, #ff304f 50%, #4d0814 100%);
+        }
+
+        @keyframes listening {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.08);
+            }
+        }
+
+        @keyframes thinking {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 30px rgba(150,80,255,0.5);
+            }
+            50% {
+                transform: scale(1.12);
+                box-shadow: 0 0 65px rgba(150,80,255,0.9);
+            }
+        }
+
+        @keyframes speaking {
+            from {
+                transform: scale(1);
+            }
+            to {
+                transform: scale(1.14);
+            }
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .state {
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .hint {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #8d96a8;
+            text-align: center;
+        }
+
+        /* CHAT */
+
+        .chat-container {
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .messages {
+            width: 100%;
+            min-height: 130px;
+            max-height: 330px;
+            overflow-y: auto;
+            padding: 10px 5px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            max-width: 82%;
+            padding: 12px 15px;
+            border-radius: 17px;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #315cff, #673cff);
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.ai {
+            align-self: flex-start;
+            background: rgba(255,255,255,0.075);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-bottom-left-radius: 5px;
+        }
+
+        .message.system {
+            align-self: center;
+            color: #8d96a8;
+            font-size: 12px;
+            background: transparent;
+        }
+
+        /* INPUT */
+
+        .input-area {
+            width: 100%;
+            display: flex;
+            gap: 10px;
+            padding: 10px 0 5px;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 18px;
+            padding: 5px 6px 5px 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        #messageInput {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: white;
+            font-size: 14px;
+            padding: 10px 5px;
+        }
+
+        #messageInput::placeholder {
+            color: #7d8493;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+        }
+
+        .send-btn {
+            width: 48px;
+            height: 44px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #00cfff, #4d55ff);
+            color: white;
+            font-size: 19px;
+            box-shadow: 0 0 18px rgba(0,180,255,0.25);
+            transition: 0.2s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .mic-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 13px;
+            background: rgba(255,255,255,0.08);
+            color: white;
+            font-size: 18px;
+            margin-right: 5px;
+        }
+
+        .mic-btn.active {
+            background: rgba(0,210,255,0.25);
+            box-shadow: 0 0 15px rgba(0,210,255,0.3);
+        }
+
+        /* FOOTER */
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            color: #626a79;
+            font-size: 11px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 15px;
+            }
+
+            .brand h1 {
+                font-size: 18px;
+            }
+
+            main {
+                padding: 20px 13px 15px;
+            }
+
+            .voice-section {
+                padding-top: 10px;
+            }
+
+            .orb-container {
+                width: 155px;
+                height: 155px;
+            }
+
+            .orb {
+                width: 95px;
+                height: 95px;
+                font-size: 32px;
+            }
+
+            .ring {
+                width: 145px;
+                height: 145px;
+            }
+
+            .ring.two {
+                width: 170px;
+                height: 170px;
+            }
+
+            .messages {
+                max-height: 280px;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+
+            .online {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
 <div class="app">
 
-```
-<div class="logo">
-    AURA AI
-</div>
+    <!-- HEADER -->
 
+    <header>
+        <div class="logo-area">
+            <div class="logo">A</div>
 
-<div class="by">
-    AI Assistant • by JLPG
-</div>
-
-
-<!-- =====================================================
-     VOICE ORB
-====================================================== -->
-
-<div
-    id="orbWrapper"
-    class="orb-wrapper listening"
->
-
-    <div class="ring"></div>
-
-    <div class="ring ring2"></div>
-
-
-    <div class="orb">
-
-        <div class="mic">
-            🎙️
+            <div class="brand">
+                <h1>AURA AI</h1>
+                <p>AI Assistant • by JLPG</p>
+            </div>
         </div>
 
-        <div
-            id="state"
-            class="state"
-        >
-            Listening
+        <div class="online">
+            <span class="online-dot"></span>
+            Online
         </div>
+    </header>
 
-    </div>
+
+    <!-- MAIN -->
+
+    <main>
+
+        <!-- VOICE ORB -->
+
+        <section class="voice-section">
+
+            <div class="orb-container">
+
+                <div class="ring"></div>
+                <div class="ring two"></div>
+
+                <div id="orb" class="orb listening">
+                    🎙️
+                </div>
+
+            </div>
+
+            <div id="state" class="state">
+                Listening
+            </div>
+
+            <div id="hint" class="hint">
+                Speak naturally — no button required
+            </div>
+
+        </section>
+
+
+        <!-- CHAT -->
+
+        <section class="chat-container">
+
+            <div id="messages" class="messages">
+
+                <div class="message ai">
+                    Hey! I'm AURA AI. You can speak to me or type a message below.
+                </div>
+
+            </div>
+
+
+            <!-- INPUT -->
+
+            <div class="input-area">
+
+                <div class="input-wrapper">
+
+                    <input
+                        id="messageInput"
+                        type="text"
+                        autocomplete="off"
+                        placeholder="Type your message..."
+                    >
+
+                    <button
+                        id="micBtn"
+                        class="mic-btn"
+                        title="Voice listening"
+                    >
+                        🎙️
+                    </button>
+
+                </div>
+
+                <button
+                    id="sendBtn"
+                    class="send-btn"
+                    title="Send"
+                >
+                    ➤
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        AURA AI • Powered by Groq • JLPG
+    </footer>
 
 </div>
 
-
-<div
-    id="status"
-    class="status"
->
-    Listening...
-</div>
-
-
-<div class="hint">
-    Speak naturally — no button required
-</div>
-
-
-<div
-    id="response"
-    class="response"
-></div>
-```
-
-</div>
 
 <script>
 
-/* ============================================================
-   ELEMENTS
-============================================================ */
+    /* ==============================
+       ELEMENTS
+    ============================== */
 
-const orbWrapper =
-    document.getElementById(
-        "orbWrapper"
-    );
+    const orb = document.getElementById("orb");
+    const stateText = document.getElementById("state");
+    const hint = document.getElementById("hint");
 
-const state =
-    document.getElementById(
-        "state"
-    );
+    const messages = document.getElementById("messages");
 
-const status =
-    document.getElementById(
-        "status"
-    );
-
-const responseBox =
-    document.getElementById(
-        "response"
-    );
+    const messageInput = document.getElementById("messageInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const micBtn = document.getElementById("micBtn");
 
 
-/* ============================================================
-   SPEECH RECOGNITION
-============================================================ */
+    /* ==============================
+       STATE
+    ============================== */
 
-const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
+    let recognition = null;
 
+    let speaking = false;
+    let thinking = false;
+    let listening = false;
 
-let recognition = null;
-
-let speaking = false;
-
-let thinking = false;
-
-let restarting = false;
+    let autoListening = true;
+    let restarting = false;
 
 
-/* ============================================================
-   CHECK SUPPORT
-============================================================ */
+    /* ==============================
+       UI STATE
+    ============================== */
 
-if (!SpeechRecognition) {
+    function setState(type, text) {
 
-    setState(
-        "thinking",
-        "Unsupported"
-    );
-
-    status.innerText =
-        "Voice recognition is not supported in this browser.";
-
-} else {
-
-    setupRecognition();
-
-}
-
-
-/* ============================================================
-   SETUP
-============================================================ */
-
-function setupRecognition() {
-
-    recognition =
-        new SpeechRecognition();
-
-
-    recognition.continuous = false;
-
-    recognition.interimResults = false;
-
-    /*
-       en-IN allows natural Indian English/Hinglish
-       recognition in many browsers.
-    */
-
-    recognition.lang = "en-IN";
-
-
-    /* ---------------------------------------------------------
-       START
-    --------------------------------------------------------- */
-
-    recognition.onstart = function() {
-
-        restarting = false;
-
-        if (speaking || thinking)
-            return;
-
-        setState(
+        orb.classList.remove(
             "listening",
-            "Listening"
+            "thinking",
+            "speaking",
+            "error"
         );
 
-        status.innerText =
-            "Listening...";
+        orb.classList.add(type);
 
-    };
+        stateText.textContent = text;
 
+        if (type === "listening") {
+            orb.textContent = "🎙️";
+        }
 
-    /* ---------------------------------------------------------
-       RESULT
-    --------------------------------------------------------- */
+        else if (type === "thinking") {
+            orb.textContent = "🧠";
+        }
 
-    recognition.onresult =
-        async function(event) {
+        else if (type === "speaking") {
+            orb.textContent = "🔊";
+        }
 
-            if (speaking)
-                return;
-
-
-            const transcript =
-                event
-                .results[0][0]
-                .transcript
-                .trim();
+        else {
+            orb.textContent = "⚠️";
+        }
+    }
 
 
-            if (!transcript)
-                return;
+    /* ==============================
+       ADD MESSAGE
+    ============================== */
+
+    function addMessage(text, type) {
+
+        const message = document.createElement("div");
+
+        message.className = "message " + type;
+
+        message.textContent = text;
+
+        messages.appendChild(message);
+
+        messages.scrollTop = messages.scrollHeight;
+
+        return message;
+    }
 
 
-            console.log(
-                "User:",
-                transcript
+    /* ==============================
+       SEND MESSAGE TO GROQ
+    ============================== */
+
+    async function askAI(message) {
+
+        if (!message || thinking) {
+            return;
+        }
+
+        thinking = true;
+
+        stopRecognition();
+
+        setState("thinking", "Thinking");
+
+        const userMessage = addMessage(message, "user");
+
+        try {
+
+            const response = await fetch("/api/chat", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    message: message
+                })
+
+            });
+
+
+            const data = await response.json();
+
+
+            if (!response.ok) {
+                throw new Error(
+                    data.reply || "AI request failed"
+                );
+            }
+
+
+            const reply =
+                data.reply ||
+                "Sorry, I couldn't answer that.";
+
+
+            addMessage(reply, "ai");
+
+
+            thinking = false;
+
+            speak(reply);
+
+        }
+
+        catch (error) {
+
+            console.error("AURA AI ERROR:", error);
+
+            thinking = false;
+
+            addMessage(
+                "Sorry, something went wrong. Please try again.",
+                "ai"
             );
 
+            setState("listening", "Listening");
 
-            thinking = true;
+            restartRecognition();
+        }
+    }
 
-            stopRecognition();
 
+    /* ==============================
+       CHAT SEND
+    ============================== */
+
+    async function sendChat() {
+
+        const message =
+            messageInput.value.trim();
+
+        if (!message) {
+            return;
+        }
+
+        messageInput.value = "";
+
+        await askAI(message);
+    }
+
+
+    sendBtn.addEventListener(
+        "click",
+        sendChat
+    );
+
+
+    messageInput.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (event.key === "Enter") {
+
+                event.preventDefault();
+
+                sendChat();
+            }
+
+        }
+    );
+
+
+    /* ==============================
+       TEXT TO SPEECH
+    ============================== */
+
+    function speak(text) {
+
+        if (!window.speechSynthesis) {
+
+            speaking = false;
 
             setState(
-                "thinking",
-                "Thinking"
+                "listening",
+                "Listening"
             );
 
-            status.innerText =
-                "Thinking...";
+            restartRecognition();
+
+            return;
+        }
 
 
-            await askAI(
-                transcript
+        stopRecognition();
+
+        window.speechSynthesis.cancel();
+
+        speaking = true;
+
+        setState(
+            "speaking",
+            "Speaking"
+        );
+
+        hint.textContent =
+            "AURA AI is speaking...";
+
+
+        const utterance =
+            new SpeechSynthesisUtterance(text);
+
+
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+
+
+        /*
+           Choose Hindi voice when
+           response contains Devanagari.
+        */
+
+        const voices =
+            window.speechSynthesis.getVoices();
+
+
+        const hasHindi =
+            /[\u0900-\u097F]/.test(text);
+
+
+        let preferredVoice;
+
+
+        if (hasHindi) {
+
+            preferredVoice =
+                voices.find(
+                    voice =>
+                        voice.lang
+                            .toLowerCase()
+                            .startsWith("hi")
+                );
+
+        } else {
+
+            preferredVoice =
+                voices.find(
+                    voice =>
+                        voice.lang
+                            .toLowerCase()
+                            .startsWith("en-in")
+                );
+
+            if (!preferredVoice) {
+
+                preferredVoice =
+                    voices.find(
+                        voice =>
+                            voice.lang
+                                .toLowerCase()
+                                .startsWith("en")
+                    );
+            }
+        }
+
+
+        if (preferredVoice) {
+
+            utterance.voice =
+                preferredVoice;
+        }
+
+
+        utterance.onend = function() {
+
+            speaking = false;
+
+            hint.textContent =
+                "Speak naturally — no button required";
+
+            setState(
+                "listening",
+                "Listening"
             );
 
+            restartRecognition();
         };
 
 
-    /* ---------------------------------------------------------
-       END
-    --------------------------------------------------------- */
+        utterance.onerror = function() {
 
-    recognition.onend =
-        function() {
+            speaking = false;
+
+            setState(
+                "listening",
+                "Listening"
+            );
+
+            restartRecognition();
+        };
+
+
+        window.speechSynthesis.speak(
+            utterance
+        );
+    }
+
+
+    /* ==============================
+       SPEECH RECOGNITION
+    ============================== */
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+
+    function setupRecognition() {
+
+        if (!SpeechRecognition) {
+
+            setState(
+                "error",
+                "Voice unavailable"
+            );
+
+            hint.textContent =
+                "Use Google Chrome or Microsoft Edge for voice.";
+
+            micBtn.disabled = true;
+
+            return;
+        }
+
+
+        recognition =
+            new SpeechRecognition();
+
+
+        recognition.continuous = false;
+
+        recognition.interimResults = false;
+
+        /*
+           en-IN works reasonably well
+           for Indian English and Hinglish.
+        */
+
+        recognition.lang = "en-IN";
+
+
+        recognition.onstart = function() {
+
+            if (speaking || thinking) {
+                return;
+            }
+
+            listening = true;
+
+            micBtn.classList.add("active");
+
+            setState(
+                "listening",
+                "Listening"
+            );
+
+            hint.textContent =
+                "I'm listening...";
+        };
+
+
+        recognition.onresult = async function(event) {
+
+            if (speaking || thinking) {
+                return;
+            }
+
+
+            const transcript =
+                event.results[0][0]
+                    .transcript
+                    .trim();
+
+
+            if (!transcript) {
+                return;
+            }
+
+
+            listening = false;
+
+            micBtn.classList.remove("active");
+
+            await askAI(transcript);
+        };
+
+
+        recognition.onend = function() {
+
+            listening = false;
+
+            micBtn.classList.remove("active");
+
 
             if (
+                autoListening &&
                 !speaking &&
                 !thinking
             ) {
 
                 restartRecognition();
-
             }
-
         };
 
 
-    /* ---------------------------------------------------------
-       ERROR
-    --------------------------------------------------------- */
-
-    recognition.onerror =
-        function(event) {
+        recognition.onerror = function(event) {
 
             console.log(
-                "Recognition error:",
+                "Speech error:",
                 event.error
             );
 
 
-            if (
-                event.error ===
-                "not-allowed"
-            ) {
+            listening = false;
+
+            micBtn.classList.remove("active");
+
+
+            if (event.error === "not-allowed") {
 
                 setState(
-                    "thinking",
+                    "error",
                     "Mic blocked"
                 );
 
-                status.innerText =
-                    "Please allow microphone access.";
+                hint.textContent =
+                    "Allow microphone permission in your browser.";
+
+                autoListening = false;
 
                 return;
-
             }
 
 
-            if (!speaking && !thinking) {
+            if (
+                autoListening &&
+                !speaking &&
+                !thinking
+            ) {
 
                 restartRecognition();
-
             }
-
         };
-
-
-    /*
-       START AUTOMATICALLY
-    */
-
-    restartRecognition();
-
-}
-
-
-/* ============================================================
-   START RECOGNITION
-============================================================ */
-
-function startRecognition() {
-
-    if (!recognition)
-        return;
-
-    if (speaking || thinking)
-        return;
-
-
-    try {
-
-        recognition.start();
-
-    } catch (error) {
-
-        /*
-           Browser throws an error if recognition
-           is already running.
-        */
-
     }
 
-}
+
+    /* ==============================
+       START RECOGNITION
+    ============================== */
+
+    function startRecognition() {
+
+        if (
+            !recognition ||
+            speaking ||
+            thinking ||
+            listening ||
+            !autoListening
+        ) {
+            return;
+        }
 
 
-/* ============================================================
-   STOP
-============================================================ */
+        try {
 
-function stopRecognition() {
+            recognition.start();
 
-    if (!recognition)
-        return;
+        }
 
+        catch (error) {
 
-    try {
-
-        recognition.stop();
-
-    } catch (error) {}
-
-}
+            console.log(
+                "Recognition start:",
+                error
+            );
+        }
+    }
 
 
-/* ============================================================
-   RESTART
-============================================================ */
+    /* ==============================
+       STOP RECOGNITION
+    ============================== */
 
-function restartRecognition() {
+    function stopRecognition() {
 
-    if (restarting)
-        return;
-
-    if (speaking || thinking)
-        return;
+        if (!recognition) {
+            return;
+        }
 
 
-    restarting = true;
+        try {
+
+            recognition.stop();
+
+        }
+
+        catch (error) {}
+    }
 
 
-    setTimeout(
-        function() {
+    /* ==============================
+       AUTO RESTART
+    ============================== */
+
+    function restartRecognition() {
+
+        if (
+            restarting ||
+            speaking ||
+            thinking ||
+            !autoListening
+        ) {
+            return;
+        }
+
+
+        restarting = true;
+
+
+        setTimeout(function() {
 
             restarting = false;
 
             startRecognition();
 
-        },
-        600
-    );
-
-}
+        }, 700);
+    }
 
 
-/* ============================================================
-   ASK AI
-============================================================ */
+    /* ==============================
+       MIC BUTTON
+    ============================== */
 
-async function askAI(message) {
+    micBtn.addEventListener(
+        "click",
+        function() {
 
-    try {
-
-        const result =
-            await fetch(
-                "/api/chat",
-                {
-
-                    method:
-                        "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body:
-                        JSON.stringify({
-                            message:
-                                message
-                        })
-
-                }
-            );
+            if (!recognition) {
+                return;
+            }
 
 
-        const data =
-            await result.json();
+            if (listening) {
 
+                autoListening = false;
 
-        if (!result.ok) {
+                stopRecognition();
 
-            throw new Error(
-                data.reply ||
-                "AI request failed"
-            );
+                listening = false;
+
+                micBtn.classList.remove(
+                    "active"
+                );
+
+                setState(
+                    "listening",
+                    "Voice paused"
+                );
+
+                hint.textContent =
+                    "Press the mic again to resume.";
+
+            }
+
+            else {
+
+                autoListening = true;
+
+                startRecognition();
+            }
 
         }
-
-
-        const reply =
-            data.reply ||
-            "Sorry, I couldn't answer that.";
-
-
-        responseBox.innerText =
-            reply;
-
-
-        thinking = false;
-
-
-        speak(
-            reply
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            error
-        );
-
-
-        thinking = false;
-
-
-        responseBox.innerText =
-            "Sorry, something went wrong.";
-
-
-        setState(
-            "listening",
-            "Listening"
-        );
-
-
-        status.innerText =
-            "Listening again...";
-
-
-        restartRecognition();
-
-    }
-
-}
-
-
-/* ============================================================
-   TEXT TO SPEECH
-============================================================ */
-
-function speak(text) {
-
-    if (
-        !window.speechSynthesis
-    ) {
-
-        speaking = false;
-
-        restartRecognition();
-
-        return;
-
-    }
-
-
-    stopRecognition();
-
-
-    window.speechSynthesis.cancel();
-
-
-    speaking = true;
-
-
-    setState(
-        "speaking",
-        "Speaking"
     );
 
 
-    status.innerText =
-        "AURA AI is speaking...";
+    /* ==============================
+       LOAD VOICES
+    ============================== */
 
+    if (window.speechSynthesis) {
 
-    const utterance =
-        new SpeechSynthesisUtterance(
-            text
-        );
+        window.speechSynthesis.onvoiceschanged =
+            function() {
 
+                window.speechSynthesis
+                    .getVoices();
 
-    /*
-       Natural speech settings.
-    */
-
-    utterance.rate = 1.0;
-
-    utterance.pitch = 1.0;
-
-    utterance.volume = 1.0;
-
-
-    /*
-       Try to choose an Indian English voice
-       when available.
-    */
-
-    const voices =
-        window.speechSynthesis
-            .getVoices();
-
-
-    const preferredVoice =
-        voices.find(
-            voice =>
-                voice.lang ===
-                "en-IN"
-        );
-
-
-    if (preferredVoice) {
-
-        utterance.voice =
-            preferredVoice;
-
+            };
     }
 
 
-    /* ---------------------------------------------------------
-       SPEECH FINISHED
-    --------------------------------------------------------- */
+    /* ==============================
+       INITIALIZE
+    ============================== */
 
-    utterance.onend =
-        function() {
-
-            speaking = false;
+    setupRecognition();
 
 
-            setState(
-                "listening",
-                "Listening"
-            );
+    /*
+       Start voice automatically.
 
+       Some browsers may require the
+       first microphone permission/user
+       interaction before this works.
+    */
 
-            status.innerText =
-                "Listening again...";
+    setTimeout(function() {
 
+        startRecognition();
 
-            /*
-               Automatically start listening again.
-            */
-
-            restartRecognition();
-
-        };
-
-
-    /* ---------------------------------------------------------
-       SPEECH ERROR
-    --------------------------------------------------------- */
-
-    utterance.onerror =
-        function() {
-
-            speaking = false;
-
-
-            setState(
-                "listening",
-                "Listening"
-            );
-
-
-            status.innerText =
-                "Listening again...";
-
-
-            restartRecognition();
-
-        };
-
-
-    window.speechSynthesis.speak(
-        utterance
-    );
-
-}
-
-
-/* ============================================================
-   UI STATE
-============================================================ */
-
-function setState(
-    mode,
-    text
-) {
-
-    orbWrapper.className =
-        "orb-wrapper " +
-        mode;
-
-
-    state.innerText =
-        text;
-
-}
-
-
-/* ============================================================
-   LOAD VOICES
-============================================================ */
-
-if (
-    window.speechSynthesis
-) {
-
-    window.speechSynthesis
-        .onvoiceschanged =
-        function() {
-
-            window.speechSynthesis
-                .getVoices();
-
-        };
-
-}
+    }, 1000);
 
 </script>
 
 </body>
-
 </html>
